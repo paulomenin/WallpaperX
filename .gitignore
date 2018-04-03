@@ -1,0 +1,13 @@
+# User-specific files
+*.suo
+*.user
+
+# Build results
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio
+.vs/
+
+# NuGet Packages
+**/[Pp]ackages/*
