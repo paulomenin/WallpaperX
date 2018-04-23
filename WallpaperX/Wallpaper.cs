@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
+using WallpaperX.PictureSource;
 
 namespace WallpaperX
 {
@@ -76,8 +77,18 @@ namespace WallpaperX
             }
 
             SystemParametersInfo(SPI_SETDESKWALLPAPER, 0,
-                filename.AbsolutePath,
+                filename.LocalPath,
                 SPIF_UPDATEINIFILE | SPIF_SENDWININICHANGE);
+        }
+
+        public static void ChangeWallpaper(PictureInfo pictureInfo)
+        {
+            Wallpaper.Set(pictureInfo.PictureUrl);
+
+            if (string.Equals("True", ConfigurationManager.AppSettings["ShowToast"]))
+            {
+                Toast.ShowToast(Program.APP_ID, pictureInfo.Description, pictureInfo.PictureUrl.LocalPath);
+            }
         }
     }
 }

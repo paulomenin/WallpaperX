@@ -15,9 +15,9 @@ namespace WallpaperX.ChangeStrategy
 
         public override void RunLogic()
         {
-            Uri imagePath = PictureSource.GetPicture();
+            PictureInfo picture = PictureSource.GetPicture();
 
-            Wallpaper.Set(imagePath);
+            Wallpaper.ChangeWallpaper(picture);
         }
     }
 }

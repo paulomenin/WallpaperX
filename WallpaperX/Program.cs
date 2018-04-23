@@ -7,13 +7,34 @@ using System.Threading;
 using System.Threading.Tasks;
 using WallpaperX.ChangeStrategy;
 using WallpaperX.PictureSource;
+using WallpaperX.ShellHelper;
 
 namespace WallpaperX
 {
     class Program
     {
+        public static string APP_ID = "WallpaperX.App";
+
         static int Main(string[] args)
         {
+            try
+            {
+                if (string.Equals("True", ConfigurationManager.AppSettings["ShowToast"]))
+                {
+                    ShortcutCreator.TryCreateMenuShortcut(APP_ID, "WallpaperX");
+                }
+
+                if (string.Equals("True", ConfigurationManager.AppSettings["StartWithWindows"]))
+                {
+                    ShortcutCreator.TryCreateStartupShortcut(APP_ID, "WallpaperX");
+                }
+            }
+            catch
+            {
+                Console.WriteLine("Cannot install Start Menu shortcut.");
+                return 1;
+            }
+
             IPictureSource pictureSource = null;
             try
             {
@@ -35,7 +56,7 @@ namespace WallpaperX
                 Console.WriteLine("ChangeStrategy not configured properly.");
                 return 1;
             }
-            
+
             Thread strategyThread = new Thread(changeStrategy.RunLogic);
             strategyThread.Start();
             strategyThread.Join();

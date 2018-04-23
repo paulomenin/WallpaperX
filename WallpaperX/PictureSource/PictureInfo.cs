@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace WallpaperX.PictureSource
 {
-    interface IPictureSource
+    class PictureInfo
     {
-        PictureInfo GetPicture();
+        public Uri PictureUrl { get; set; }
+        public string Description { get; set; } 
     }
 }

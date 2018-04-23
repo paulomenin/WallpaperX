@@ -15,6 +15,7 @@ namespace WallpaperX.PictureSource
     {
         public string Url { get; set; }
         public string UrlBase { get; set; }
+        public string Copyright { get; set; }
     }
 
     class BingSource : IPictureSource
@@ -74,7 +75,7 @@ namespace WallpaperX.PictureSource
             BingWallpaperDataUrl = $"/HPImageArchive.aspx?format=js&idx=0&n=1&mkt={currentMarket}";
         }
 
-        public Uri GetPicture()
+        public PictureInfo GetPicture()
         {
             SetMarket();
 
@@ -85,6 +86,8 @@ namespace WallpaperX.PictureSource
             using (var client = new WebClient())
             {
                 metadataJson = client.DownloadString(BingBaseUrl + BingWallpaperDataUrl);
+                byte[] bytes = Encoding.Default.GetBytes(metadataJson);
+                metadataJson = Encoding.UTF8.GetString(bytes);
             }
 
             JObject metadataObject = JObject.Parse(metadataJson);
@@ -115,7 +118,11 @@ namespace WallpaperX.PictureSource
                 pictureUri = pictureCache.DownloadImage(new Uri(pictureUrl));
             }
 
-            return pictureUri;
+            PictureInfo info = new PictureInfo();
+            info.PictureUrl = pictureUri;
+            info.Description = imagesMetadata[0].ToObject<ImageResult>().Copyright;
+
+            return info;
         }
     }
 }

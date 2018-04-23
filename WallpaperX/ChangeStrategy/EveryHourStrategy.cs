@@ -17,9 +17,9 @@ namespace WallpaperX.ChangeStrategy
         {
             while (true)
             {
-                Uri imagePath = PictureSource.GetPicture();
+                PictureInfo picture = PictureSource.GetPicture();
 
-                Wallpaper.Set(imagePath);
+                Wallpaper.ChangeWallpaper(picture);
 
                 System.Threading.Thread.Sleep(1000 * 60 * 60); // Sleep for 1 hour
             }
