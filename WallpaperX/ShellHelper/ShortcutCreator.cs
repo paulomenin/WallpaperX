@@ -14,7 +14,7 @@ namespace WallpaperX.ShellHelper
     {
         public static bool TryCreateMenuShortcut(string appId, string appName)
         {
-            return TryCreateShortcut("\\Microsoft\\Windows\\Start Menu\\Programs\\", appId, appName);
+            return TryCreateShortcut("\\Microsoft\\Windows\\Start Menu\\Programs\\WallpaperX\\", appId, appName);
         }
 
         public static bool TryCreateStartupShortcut(string appId, string appName)

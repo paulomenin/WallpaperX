@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:ui="http://schemas.microsoft.com/wix/UIExtension"
+     xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
+	
+    <Product Id="*"
+             Name="WallpaperX"
+             Language="1033" 
+             Version="1.0.0.0" 
+             Manufacturer="WallpaperX" 
+             UpgradeCode="1D1BDB76-8C09-4243-899B-41866618D02C">
+    
+		<Package InstallerVersion="200"
+             Compressed="yes"
+             InstallScope="perUser" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MediaTemplate EmbedCab="yes" />
+
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+    <UIRef Id="WixUI_InstallDir" />
+    <WixVariable Id="WixUILicenseRtf" Value="LICENSE.rtf" />
+
+    <PropertyRef Id="WIX_IS_NETFRAMEWORK_462_OR_LATER_INSTALLED"/>
+    <Condition Message="This application requires .NET Framework 4.6.2. Please install the .NET Framework then run this installer again.">
+        <![CDATA[Installed OR WIX_IS_NETFRAMEWORK_462_OR_LATER_INSTALLED]]>
+    </Condition>
+      
+		<Feature Id="FT_ProductComplete" Title="WallpaperX" Level="1">
+			<ComponentGroupRef Id="CMPGRP_ProductComponents" />
+      <ComponentRef Id="CMP_ApplicationShortcut" />
+		</Feature>
+	</Product>
+
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLFOLDER" Name="WallpaperX" />
+			</Directory>
+		  
+      <Directory Id="ProgramMenuFolder" >
+        <Directory Id="ApplicationProgramsFolder" Name="WallpaperX"/>
+      </Directory>
+  
+      <Directory Id="StartupFolder"></Directory>     
+    </Directory>
+	</Fragment>
+
+	<Fragment>
+		<ComponentGroup Id="CMPGRP_ProductComponents" Directory="INSTALLFOLDER">
+			<Component Id="CMP_ProductEXE">
+        <File Id='FILE_WallpaperX.EXE' Name='WallpaperX.exe' Source='$(var.WallpaperX.TargetPath)' KeyPath='yes'>
+              
+        </File>
+         
+			</Component>
+      <Component Id="CMP_ProductEXE.config">
+        <File Id='FILE_WallpaperX.EXE.config' Name='WallpaperX.exe.config' Source='$(var.WallpaperX.TargetPath).config' KeyPath='yes'></File>
+      </Component>
+
+      <Component Id="CMP_Newtonsoft.Json.dll">
+        <File Id='FILE_Newtonsoft.Json.dll' Name='Newtonsoft.Json.dll' Source='$(var.WallpaperX.TargetDir)Newtonsoft.Json.dll' KeyPath='yes'></File>
+      </Component>
+
+      <Component Id="CMP_Microsoft.WindowsAPICodePack.dll">
+        <File Id='FILE_Microsoft.WindowsAPICodePack.dll' Name='Microsoft.WindowsAPICodePack.dll' Source='$(var.WallpaperX.TargetDir)Microsoft.WindowsAPICodePack.dll' KeyPath='yes'></File>
+      </Component>
+      <Component Id="CMP_Microsoft.WindowsAPICodePack.ExtendedLinguisticServices.dll">
+        <File Id='FILE_Microsoft.WindowsAPICodePack.ExtendedLinguisticServices.dll' Name='Microsoft.WindowsAPICodePack.ExtendedLinguisticServices.dll' Source='$(var.WallpaperX.TargetDir)Microsoft.WindowsAPICodePack.ExtendedLinguisticServices.dll' KeyPath='yes'></File>
+      </Component>
+      <Component Id="CMP_Microsoft.WindowsAPICodePack.Sensors.dll">
+        <File Id='FILE_Microsoft.WindowsAPICodePack.Sensors.dll' Name='Microsoft.WindowsAPICodePack.Sensors.dll' Source='$(var.WallpaperX.TargetDir)Microsoft.WindowsAPICodePack.Sensors.dll' KeyPath='yes'></File>
+      </Component>
+      <Component Id="CMP_Microsoft.WindowsAPICodePack.Shell.dll">
+        <File Id='FILE_Microsoft.WindowsAPICodePack.Shell.dll' Name='Microsoft.WindowsAPICodePack.Shell.dll' Source='$(var.WallpaperX.TargetDir)Microsoft.WindowsAPICodePack.Shell.dll' KeyPath='yes'></File>
+      </Component>
+      <Component Id="CMP_Microsoft.WindowsAPICodePack.ShellExtensions.dll">
+        <File Id='FILE_Microsoft.WindowsAPICodePack.ShellExtensions.dll' Name='Microsoft.WindowsAPICodePack.ShellExtensions.dll' Source='$(var.WallpaperX.TargetDir)Microsoft.WindowsAPICodePack.ShellExtensions.dll' KeyPath='yes'></File>
+      </Component>      
+		</ComponentGroup>
+	</Fragment>
+  
+<Fragment>
+  <Component Id="CMP_ApplicationShortcut" Directory="ApplicationProgramsFolder" Guid="7571F9D3-8B2A-48C8-A76A-1A7D9F7E24EF">
+    <Shortcut Id="ApplicationStartMenuShortcut"
+              Name="WallpaperX"
+              Description="Wallpaper Changer"
+              WorkingDirectory="INSTALLFOLDER"
+              Target="[INSTALLFOLDER]WallpaperX.exe">      
+      <ShortcutProperty Key="System.AppUserModel.ID" Value="WallpaperX.App"/>
+    </Shortcut>
+    <Shortcut Id="ApplicationStartupShortcut"
+              Name="WallpaperX"
+              Description="Wallpaper Changer"
+              Directory="StartupFolder"
+              WorkingDirectory="INSTALLFOLDER"
+              Target="[INSTALLFOLDER]WallpaperX.exe"/>
+    <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
+    <RegistryValue Root="HKCU" Key="Software\Microsoft\WallpaperX" Name="installed" Type="integer" Value="1" KeyPath="yes"/>           
+  </Component>
+</Fragment>
+
+</Wix>

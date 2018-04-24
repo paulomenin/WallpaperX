@@ -19,6 +19,7 @@ namespace WallpaperX
         {
             try
             {
+                // Create necessary shortcuts
                 if (string.Equals("True", ConfigurationManager.AppSettings["ShowToast"]))
                 {
                     ShortcutCreator.TryCreateMenuShortcut(APP_ID, "WallpaperX");
