@@ -41,7 +41,7 @@ namespace WallpaperX.PictureSource
             "pt-br",
             "zh-cn",
         };
-        private string currentMarket { get; set; }
+        private string CurrentMarket { get; set; }
         private int currentMarketIdx = 0;
 
         public BingSource()
@@ -56,23 +56,23 @@ namespace WallpaperX.PictureSource
         {
             if (BingMarkets.Contains(Market))
             {
-                currentMarket = Market;
+                CurrentMarket = Market;
             }
             else
             {
-                if (string.Equals(currentMarket, ALL_MARKETS))
+                if (string.Equals(CurrentMarket, ALL_MARKETS))
                 {
-                    currentMarket = BingMarkets[currentMarketIdx];
+                    CurrentMarket = BingMarkets[currentMarketIdx];
                     currentMarketIdx = (currentMarketIdx + 1) % BingMarkets.Count;
                 }
                 else
                 {
-                    currentMarket = DEFAULT_MARKET;
+                    CurrentMarket = DEFAULT_MARKET;
                 }
 
             }
 
-            BingWallpaperDataUrl = $"/HPImageArchive.aspx?format=js&idx=0&n=1&mkt={currentMarket}";
+            BingWallpaperDataUrl = $"/HPImageArchive.aspx?format=js&idx=0&n=1&mkt={CurrentMarket}";
         }
 
         public PictureInfo GetPicture()
@@ -80,6 +80,7 @@ namespace WallpaperX.PictureSource
             SetMarket();
 
             string pictureUrl = string.Empty;
+            string pictureName = string.Empty;
             string metadataJson = String.Empty;
 
             // Download metadata
@@ -99,7 +100,11 @@ namespace WallpaperX.PictureSource
                     BingBaseUrl,
                     imagesMetadata[0].ToObject<ImageResult>().UrlBase,
                     PictureSize);
+
+                // Get Picture name
+                pictureName = ParsePictureName(imagesMetadata[0].ToObject<ImageResult>());
             }
+
 
             // Download Image
             PictureCache pictureCache = new PictureCache("bing");
@@ -107,7 +112,7 @@ namespace WallpaperX.PictureSource
             Uri pictureUri = null;
             try
             {
-                pictureUri = pictureCache.DownloadImage(new Uri(pictureUrl));
+                pictureUri = pictureCache.DownloadImage(new Uri(pictureUrl), pictureName);
             }
             catch
             {
@@ -118,11 +123,24 @@ namespace WallpaperX.PictureSource
                 pictureUri = pictureCache.DownloadImage(new Uri(pictureUrl));
             }
 
-            PictureInfo info = new PictureInfo();
-            info.PictureUrl = pictureUri;
-            info.Description = imagesMetadata[0].ToObject<ImageResult>().Copyright;
+            PictureInfo info = new PictureInfo
+            {
+                PictureUrl = pictureUri,
+                Description = imagesMetadata[0].ToObject<ImageResult>().Copyright
+            };
 
             return info;
+        }
+
+        private string ParsePictureName(ImageResult imageMetadata)
+        {
+            int queryStringStart = imageMetadata.UrlBase.IndexOf('?');
+            string queryString = imageMetadata.UrlBase.Substring(queryStringStart + 1);
+            var queryStrings = System.Web.HttpUtility.ParseQueryString(queryString);
+
+            return string.Format("{0}_{1}.jpg",
+                                queryStrings.Get("id"),
+                                PictureSize);
         }
     }
 }
