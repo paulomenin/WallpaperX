@@ -6,7 +6,7 @@
     <Product Id="*"
              Name="WallpaperX"
              Language="1033" 
-             Version="1.0.0.0" 
+             Version="1.0.1.0" 
              Manufacturer="WallpaperX" 
              UpgradeCode="1D1BDB76-8C09-4243-899B-41866618D02C">
     
@@ -14,7 +14,10 @@
              Compressed="yes"
              InstallScope="perUser" />
 
-		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MajorUpgrade
+      Schedule="afterInstallInitialize"
+      DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+      
 		<MediaTemplate EmbedCab="yes" />
 
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
