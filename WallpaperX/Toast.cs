@@ -10,19 +10,22 @@ namespace WallpaperX
 {
     class Toast
     {
-        public static void ShowToast(string appId, string message, string imagePath = null)
+        public static void ShowToast(string appId, string message, string imagePath = null, string attribution = null)
         {
-            XmlDocument toastXml = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastImageAndText01);
+            string toastXmlString =
+                $@"<toast>
+                     <visual>
+                       <binding template='ToastGeneric'>
+                         <image placement='hero' src='{imagePath}'/>
+                         <image placement='appLogoOverride' hint-crop='circle' src='{imagePath}'/>
+                         <text>{message}</text>
+                         <text>{attribution}</text>
+                       </binding>
+                     </visual>
+                   </toast>";
 
-            XmlNodeList stringElements = toastXml.GetElementsByTagName("text");
-            stringElements[0].AppendChild(toastXml.CreateTextNode(message));
-
-            if (! string.IsNullOrWhiteSpace(imagePath))
-            {
-                imagePath = "file:///" + imagePath;
-                XmlNodeList imageElements = toastXml.GetElementsByTagName("image");
-                imageElements[0].Attributes.GetNamedItem("src").NodeValue = imagePath;
-            }
+            XmlDocument toastXml = new XmlDocument();
+            toastXml.LoadXml(toastXmlString);    
 
             ToastNotification toast = new ToastNotification(toastXml);
 
